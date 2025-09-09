@@ -18,7 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(form);
 
     try {
-      const res = await fetch("/api/register", {
+      // Use your live Render backend URL here
+      const res = await fetch("https://e3footbal.onrender.com/register", {
         method: "POST",
         body: formData,
       });

@@ -6,9 +6,14 @@ const path = require("path");
 require("dotenv").config(); 
 
 const app = express();
-const upload = multer({ dest: "uploads/" });
 
-// Parse URL-encoded bodies
+// Limit file size to 5MB
+const upload = multer({ 
+  dest: "uploads/",
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+});
+
+// Parse URL-encoded and JSON bodies
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -72,15 +77,33 @@ Guardian Info:
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
-    if (req.file) fs.unlinkSync(req.file.path); // delete temp file
+    // Delete uploaded file immediately to free memory
+    if (req.file && fs.existsSync(req.file.path)) {
+      fs.unlink(req.file.path, (err) => {
+        if (err) console.error("Error deleting file:", err);
+      });
+    }
+
     if (error) {
-      console.error(error);
+      console.error("Email error:", error);
       return res.status(500).send("❌ Error sending email");
     }
+
     res.send("✅ Registration submitted and sent to your email!");
   });
 });
 
+// Handle file size or other multer errors
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).send("❌ File too large. Max size is 5MB.");
+    }
+    return res.status(400).send(`❌ Multer error: ${err.message}`);
+  }
+  next(err);
+});
+
 // Dynamic port for Render
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`🚀 Server running on port ${port}`));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🚀 Server runnin
