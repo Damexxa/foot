@@ -89,7 +89,8 @@ Guardian Info:
       return res.status(500).send("❌ Error sending email");
     }
 
-    res.send("✅ Registration submitted and sent to your email!");
+    res.send("🎉 Your registration was successful! We will contact you soon.");
+
   });
 });
 
