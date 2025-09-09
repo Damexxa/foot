@@ -105,5 +105,7 @@ app.use((err, req, res, next) => {
 });
 
 // Dynamic port for Render
+// Dynamic port for Render
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server runnin
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
