@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Serve frontend
-app.use(express.static(path.join(__dirname, "../frontend/index.html")));
+app.use(express.static(path.join(__dirname, "../frontend")));
 
 // Nodemailer config
 const transporter = nodemailer.createTransport({
@@ -103,7 +103,9 @@ app.use((err, req, res, next) => {
   }
   next(err);
 });
-
+app.get("/", (req, res) => {
+  res.send("Welcome to E3 Football Agency!");
+});
 // Dynamic port for Render
 // Dynamic port for Render
 const PORT = process.env.PORT || 3000;
