@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <meta charset="UTF-8">
+  <title>E3 Football Agency Registration</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+  
+  <div class="top">
+    <div class="loop">
+      <img src="logo.jpg" alt="logo" height="100px">
+    </div>
+    <div class="to">
+      <h2>E3 FOOTBALL AGENCY FOOTBALL</h2>
+      <p><strong>Address:</strong> No 3, Behind Ecwa Goodnews, Church, Diko, Niger State</p>
+      <p><strong>Branch:</strong> Kaida Tipper Road, Old Kutunku, Gwagwalada, Abuja</p>
+      <p><strong>Email:</strong> eliudedeleanor@gmail.com</p>
+    </div>
+  </div>
+<div class="logo">
+
+ 
+  <form action="http://localhost:3000/register" method="POST" enctype="multipart/form-data">
+   <fieldset>
+
+   <legend><b>Registration Form</b></legend>
+    <label>Surname:</label><br>
+    <input type="text" name="surname" required><br><br>
+
+    <label>First Name:</label><br>
+    <input type="text" name="firstname" required><br><br>
+
+    <label>Middle Name:</label><br>
+    <input type="text" name="middlename"><br><br>
+
+    <label>Residential Address:</label><br>
+    <input type="text" name="address" required><br><br>
+
+    <label>State of Origin:</label><br>
+    <input type="text" name="state" required><br><br>
+
+    <label>LGA:</label><br>
+    <input type="text" name="lga"><br><br>
+
+    <label>Religion:</label><br>
+    <input type="text" name="religion"><br><br>
+
+    <label>Phone No:</label><br>
+    <input type="text" name="phone" required><br><br>
+
+    <label>Date of Birth:</label><br>
+    <input type="date" name="dob" required><br><br>
+
+    <label>Sex:</label><br>
+    <select name="sex" required>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select><br><br>
+
+    <h3>Guardian Information</h3>
+
+    <label>Name of Parent/Guardian:</label><br>
+    <input type="text" name="guardian_name" required><br><br>
+
+    <label>Parent/Guardian Address:</label><br>
+    <input type="text" name="guardian_address" required><br><br>
+
+    <label>Parent/Guardian Phone:</label><br>
+    <input type="text" name="guardian_phone" required><br><br>
+
+    <h3>Make Payment</h3>
+
+  <button id="payBtn">💳 Make Payment</button>
+
+  <div id="paymentDetails" class="hidden">
+    <h4>Bank Details</h4>
+    <p><strong>Bank Name:</strong> Opay Bank</p>
+    <p><strong>Account Number:</strong> 9012544275</p>
+    <p><strong>Account Name:</strong> Alex Aroh Lawrence</p>
+  </div><br>
+    <div class="upload-field">
+      <label>Upload Receipt:</label><br>
+    </div>
+    
+    <input type="file" name="image" accept="image/*"><br><br>
+    <div class="btn">
+       <button id="reg" type="submit">Submit Registration</button>
+    </div>
+   </fieldset>
+  </form>
+</div> 
+  <script src="index.js"></script>
+</body>
+</html>
