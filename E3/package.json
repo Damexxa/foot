@@ -14,7 +14,7 @@
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "multer": "^2.0.2",
-    "@sendgrid/mail": "^7.x",
+     "resend": "^3.4.0",
     "nodemailer": "^7.0.6"
   }
 }
