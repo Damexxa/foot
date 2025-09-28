@@ -1,29 +1,23 @@
 const express = require("express");
 const multer = require("multer");
-const sgMail = require("@sendgrid/mail");
 const fs = require("fs");
 const path = require("path");
+const { Resend } = require("resend");
 require("dotenv").config();
 
 const app = express();
 
-// Limit file size to 5MB
 const upload = multer({
   dest: "uploads/",
   limits: { fileSize: 5 * 1024 * 1024 } // 5MB
 });
 
-// Parse URL-encoded and JSON bodies
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// Serve frontend
 app.use(express.static(path.join(__dirname, "../frontend")));
 
-// Configure SendGrid
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Handle registration form
 app.post("/register", upload.single("image"), async (req, res) => {
   const {
     surname,
@@ -42,9 +36,9 @@ app.post("/register", upload.single("image"), async (req, res) => {
   } = req.body;
 
   try {
-    const msg = {
-      to: process.env.EMAIL_USER, // Receiver email
-      from: process.env.EMAIL_USER, // Must be verified on SendGrid
+    const options = {
+      from: "E3 Football Agency <onboarding@resend.dev>", // use a verified email or default resend.dev
+      to: process.env.EMAIL_USER, // your email
       subject: "📌 New E3 Football Agency Registration",
       text: `
 New Registration Received:
@@ -65,56 +59,29 @@ Guardian Info:
 - Name: ${guardian_name}
 - Address: ${guardian_address}
 - Phone: ${guardian_phone}
-`,
-      attachments: req.file
-        ? [
-            {
-              content: fs.readFileSync(req.file.path).toString("base64"),
-              filename: req.file.originalname,
-              type: req.file.mimetype,
-              disposition: "attachment"
-            }
-          ]
-        : []
+`
     };
 
-    await sgMail.send(msg);
+    // Send email
+    await resend.emails.send(options);
 
-    // Delete uploaded file after sending
+    // Clean up uploaded file if any
     if (req.file && fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path);
+      fs.unlink(req.file.path, (err) => {
+        if (err) console.error("Error deleting file:", err);
+      });
     }
 
     res.send("🎉 Your registration was successful! We will contact you soon.");
   } catch (error) {
-    console.error("SendGrid error:", error);
-
-    // Delete uploaded file even if email fails
-    if (req.file && fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path);
-    }
-
+    console.error("Email error:", error);
     res.status(500).send("❌ Error sending email");
   }
-});
-
-// Handle file size or other multer errors
-app.use((err, req, res, next) => {
-  if (err instanceof multer.MulterError) {
-    if (err.code === "LIMIT_FILE_SIZE") {
-      return res.status(400).send("❌ File too large. Max size is 5MB.");
-    }
-    return res.status(400).send(`❌ Multer error: ${err.message}`);
-  }
-  next(err);
 });
 
 app.get("/", (req, res) => {
   res.send("Welcome to E3 Football Agency!");
 });
 
-// Dynamic port for Render
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
